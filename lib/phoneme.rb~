@@ -16,34 +16,38 @@ class Phoneme
   def initialize(s)
 
     @a = [
-      {ey: /^a.[eo]/, ae: /^a.*/ },
+      {ey: /^a.[eo]/, ah: /^a$/, ae: /^a.*/ },
       :b,
       {k: /^ca|^co/, ch: /^(ch)/,s: /^ce|^c.*/},
-      :d,
-      {iy: /^(ee)|^e$/, eh: /^e.*/},
+      {d: /^(de)$|^d.*/},
+      {iy: /^(e[eayi])|^e$/, eh: /^e.*/},
       :f,
       {jh: /^ge/, :'' => /^(gh)/, g: /^g.*/},
       {hh: /^h.*/},
-      {ay: /^i$|^ie|^igh|^i.e/, ih: /^i.*/},
+      {ay: /^i$|^(ie)|^igh|^i.e/, ih: /^i.*/},
       :jh,
-      {n: /^kn/, k: /^k.*/},
-      :l,
-      {m: /^(me)|^m/},
-      {ng: /^ng/, n: /^n.*/},
-      {ow: /^oa|^o$/, oy: /^oy/, uh: /^(oo)/, ao: /^(ou)/, aw: /^(o[uw])/, ah: /^om|^pl/, aa: /^(o).*/},
+      {n: /^(kn)/, k: /^k.*/},
+      {l: /^(le)$|^l.*/},
+      {m: /^me$|^(me)|^m/},
+      {ng: /^(ng)/, n: /^n.*/},
+      {ow: /^(oa)|^o$/, oy: /^(oy)/, uh: /^(oo)/, ao: /^(ou)/, aw: /^(o[uw])/, ah: /^om|^pl/, aa: /^(o).*/},
       {p: /^p.*/},
       :q,
       :r,
-      {sh: /^(sh)/, s: /^s.*/},
-      {th: /^(th)/, t: /^t.*/},
+      {sh: /^(sh)/, z: /^(se)$/, s: /^s.*/},
+      {th: /^(th)/, t: /^(te)$|^t.*/},
       {uw: /^(u)b|^(u)de/, er: /^(ur)/, ah: /^u.*/},
       :v,
-      {w: /^(wh)|^w.*/},
+      {uw: /^(wo)/, w: /^(wh)|^w.*/},
       {z: /^xy/, e: /^x.*/},
+      :y,
       {zh: /^zu/, z: /^z.*/}
     ]
     
-    @to_s = phonemize(s).sub(/e$/,'').sub(/([ld]) iy$/,'\1').rstrip.upcase
+    @to_s = phonemize(s.downcase)\
+        .sub(/ m iy$/,' m').sub(/th( iy)$/,'dh\1')\
+        .sub(/th eh t /, 'th ey t ').sub(/^(y )ay( l )/,'\1iy\2')\
+        .sub(/er iy$/,'er').rstrip.upcase
   end
 
   private
@@ -81,7 +85,6 @@ class Phoneme
       if new_s.length > 0  then
         
         new_sym =  phonemize(new_s)
-        puts "new_sym: %s for new_s: %s" % [new_sym, new_s]
         !r3.empty? ? r3 + ' ' + new_sym : new_sym
       else
 

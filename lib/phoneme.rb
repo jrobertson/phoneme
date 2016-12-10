@@ -18,8 +18,9 @@ class Phoneme
     @a = [
       {ey: /^a.[eo]/, ah: /^a$/, ae: /^a.*/ },
       :b,
-      {k: /^ca|^co/, ch: /^(ch)/,s: /^ce|^c.*/},
-      {d: /^(de)$|^d.*/},
+      {:'s k' => /^(sc)/},       
+      {k: /^ca|^co|^(ck)/, ch: /^(ch)/,s: /^ce|^c.*/},
+      {d: /^(d[de])$|^d.*/},
       {iy: /^(e[eayi])|^e$/, eh: /^e.*/},
       :f,
       {jh: /^ge/, :'' => /^(gh)/, g: /^g.*/},
@@ -30,13 +31,18 @@ class Phoneme
       {l: /^(le)$|^l.*/},
       {m: /^me$|^(me)|^m/},
       {ng: /^(ng)/, n: /^n.*/},
-      {ow: /^(oa)|^o$/, oy: /^(oy)/, uh: /^(oo)/, ao: /^(ou)/, aw: /^(o[uw])/, ah: /^om|^pl/, aa: /^(o).*/},
+      {ow: /^(oa)|^o$/, oy: /^(oy)/, uh: /^(oo)/, ao: /^(ou)/, 
+                        aw: /^(o[uw])/, ah: /^om|^pl/, aa: /^(o).*/},
       {p: /^p.*/},
       :q,
       :r,
       {sh: /^(sh)/, z: /^(se)$/, s: /^s.*/},
-      {th: /^(th)/, t: /^(te)$|^t.*/},
-      {uw: /^(u)b|^(u)de/, er: /^(ur)/, ah: /^u.*/},
+      {:'t ah l' => /(t?tle)$/},
+      {th: /^(th)/},
+      {:'ch er' => /(ture)/}, 
+      {t: /^(te)$|^t.*/},
+      {:'y uw' => /^ut[eu]/},      
+      {uw: /^(u)b|^(u)de/, er: /^(ure?)/, ah: /^u.*/},
       :v,
       {uw: /^(wo)/, w: /^(wh)|^w.*/},
       {z: /^xy/, e: /^x.*/},
@@ -46,15 +52,14 @@ class Phoneme
     
     @to_s = phonemize(s.downcase)\
         .sub(/ m iy$/,' m').sub(/th( iy)$/,'dh\1')\
-        .sub(/th eh t /, 'th ey t ').sub(/^(y )ay( l )/,'\1iy\2')\
-        .sub(/er iy$/,'er').rstrip.upcase
+        .sub(/th eh t /, 'th ey t ').sub(/^(y )ay( l )/,'\1iy\2').rstrip.upcase
   end
 
   private
 
   def phonemize(s)
 
-    s2 = s[0..2]
+    s2 = s[0..3]
 
     r3 = ''
 
@@ -80,7 +85,7 @@ class Phoneme
 
     if r then
 
-      new_s = $1 ? s[2..-1] : s[1..-1]
+      new_s = $1 ? s[($1).length..-1] : s[1..-1]
 
       if new_s.length > 0  then
         
