@@ -7,6 +7,7 @@
 #
 # * https://github.com/chrisvfritz/isabella
 # * http://www.speech.cs.cmu.edu/tools/lmtool-new.html
+# * http://www.speech.cs.cmu.edu/cgi-bin/cmudict
 #
 
 class Phoneme
@@ -16,49 +17,52 @@ class Phoneme
   def initialize(s)
 
     @a = [
-      {ey: /^a.[eo]/, ah: /^a$/, ae: /^a.*/ },
+      {:'ey k ah n' => /^(acon)$/, ey: /^a.[eo]/, ah: /^a$|^al$/, ae: /^a.*/ },
       :b,
-      {:'s k' => /^(sc)/},       
-      {k: /^ca|^co|^(ck)/, ch: /^(ch)/,s: /^ce|^c.*/},
-      {d: /^(d[de])$|^d.*/},
-      {iy: /^(e[eayi])|^e$/, eh: /^e.*/},
+      {:'s k' => /^(sc)/},
+      {:'s ih r iy' => /^(cere)/ },
+      {:'k l ow' => /^(clo)/, k: /^c[oal]|^(ck)/, ch: /^(ch)/,s: /^ce|^c.*/},
+      {dz: /^(ds)/, d: /^(d[de])$|^d.*/},
+      {:'iy z' => /^(eese)$/, iy: /^(e[eayi])|^e$/}, 
+      {:'eh k s' => /^x$|^(ex)/, eh: /^e.*/},
       :f,
       {jh: /^ge/, :'' => /^(gh)/, g: /^g.*/},
       {hh: /^h.*/},
       {ay: /^i$|^(ie)|^igh|^i.e/, ih: /^i.*/},
       :jh,
-      {n: /^(kn)/, k: /^k.*/},
+      {n: /^(kn)/, k: /^(ke)$|^k.*/},
       {l: /^(le)$|^l.*/},
       {m: /^me$|^(me)|^m/},
-      {ng: /^(ng)/, n: /^n.*/},
+      {ng: /^(ng)/, nz: /^(ns)/, n: /^n.*/},
       {ow: /^(oa)|^o$/, oy: /^(oy)/, uh: /^(oo)/, ao: /^(ou)/, 
                         aw: /^(o[uw])/, ah: /^om|^pl/, aa: /^(o).*/},
       {p: /^p.*/},
       :q,
+      {:'r ah t' => /(rrot)/, :'r ay n' => /^(rin)d/},
       :r,
-      {sh: /^(sh)/, z: /^(se)$/, s: /^s.*/},
+      {sh: /^(sh)/,  s: /^(s[es])$|^s.*/},
       {:'t ah l' => /(t?tle)$/},
       {th: /^(th)/},
       {:'ch er' => /(ture)/}, 
-      {t: /^(te)$|^t.*/},
+      {:'t er' => /^(ter)/, t: /^(te)$|^t.*/},
       {:'y uw' => /^ut[eu]/},      
       {uw: /^(u)b|^(u)de/, er: /^(ure?)/, ah: /^u.*/},
       :v,
       {uw: /^(wo)/, w: /^(wh)|^w.*/},
-      {z: /^xy/, e: /^x.*/},
+      {z: /^xy/,  e: /^x.*/},
       :y,
       {zh: /^zu/, z: /^z.*/}
     ]
     
     @to_s = phonemize(s.downcase)\
-        .sub(/ m iy$/,' m').sub(/th( iy)$/,'dh\1')\
-        .sub(/th eh t /, 'th ey t ').sub(/^(y )ay( l )/,'\1iy\2').rstrip.upcase
+        .sub(/ ([mn]) iy$/,' \1').sub(/th( iy)$/,'dh\1')\
+        .sub(/th eh t /, 'th ey t ').sub(/^([y] )ay( l )/,'\1iy\2').rstrip.upcase
   end
 
   private
 
   def phonemize(s)
-
+    #puts 's: ' + s.inspect
     s2 = s[0..3]
 
     r3 = ''
